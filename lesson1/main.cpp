@@ -17,7 +17,9 @@ int main( int argc, char* args[] )
 
 	//The surface contained by the window
 	SDL_Surface* screenSurface = NULL;
-	XDate xdate(1, 2, 3);
+	XDate xdate;
+	xdate = XDate(1, 2, 3);
+	printf("finished xdating\n");
 
 	//Initialize SDL
 	if( SDL_Init( SDL_INIT_VIDEO ) < 0 )

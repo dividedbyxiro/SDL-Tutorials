@@ -14,7 +14,7 @@ public:
 //        month = newMonth;
 //        year = newYear;
 //    }
-
+	~XDate();
     int day;
     int month;
     int year;

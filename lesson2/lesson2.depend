@@ -1,8 +1,7 @@
 # depslib dependency file v1.0
-1523546412 source:c:\development\github projects\sdl tutorials\sdl-tutorials\lesson1\main.cpp
-	<SDL.h>
+1523481720 source:c:\development\github projects\sdl tutorials\sdl-tutorials\lesson2\main.cpp
 	<stdio.h>
-	"XDate.h"
+	<SDL.h>
 
 1476935894 c:\mingw_dev_lib\include\sdl2\sdl.h
 	"SDL_main.h"
@@ -322,13 +321,4 @@
 	"SDL_stdinc.h"
 	"begin_code.h"
 	"close_code.h"
-
-1523506715 source:c:\github repositories\sdl-tutorials\lesson1\main.cpp
-	<SDL.h>
-	<stdio.h>
-	"XDate.h"
-
-1523506897 c:\github repositories\sdl-tutorials\lesson1\include\xdate.h
-
-1523546452 c:\development\github projects\sdl tutorials\sdl-tutorials\lesson1\include\xdate.h
 
