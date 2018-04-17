@@ -1,7 +1,3 @@
-#include <stdio.h>
-#include <SDL.h>
-#include <SDL_image.h>
-#include <string>
 #include "LTexture.h"
 
 using namespace std;
@@ -9,22 +5,11 @@ using namespace std;
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
 
-enum COLOR
-{
-	RED,
-	GREEN,
-	YELLOW,
-	BLUE,
-	MAX_COLORS
-};
-
 SDL_Window *gWindow = NULL;
 SDL_Renderer *gRenderer = NULL;
 
-LTexture gDots;
 LTexture gBackground;
-
-SDL_Rect gRects[MAX_COLORS];
+LTexture gFoo;
 
 bool init();
 bool loadMedia();
@@ -35,6 +20,8 @@ int main(int argc, char *argv[])
 	bool quit = false;
 	SDL_Event e;
 
+	Uint8 r = 255, g = 255, b = 255;
+
 	if(!init())
 	{
 		printf("init failed\n");
@@ -44,7 +31,7 @@ int main(int argc, char *argv[])
 
 	if(!loadMedia())
 	{
-		printf("init failed\n");
+		printf("loadMedia failed\n");
 		close();
 		return 0;
 	}
@@ -53,13 +40,8 @@ int main(int argc, char *argv[])
 	{
 		SDL_SetRenderDrawColor(gRenderer, 255, 255, 255, 255);
 		SDL_RenderClear(gRenderer);
-
 		gBackground.render(0, 0, NULL);
-		gDots.render(0, 0, &gRects[RED]);
-		gDots.render(SCREEN_WIDTH - gRects[GREEN].w, 0, &gRects[GREEN]);
-		gDots.render(0, SCREEN_HEIGHT - gRects[YELLOW].h, &gRects[YELLOW]);
-		gDots.render(SCREEN_WIDTH - gRects[BLUE].w, SCREEN_HEIGHT - gRects[BLUE].h, &gRects[BLUE]);
-
+		gFoo.render(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, NULL);
 		SDL_RenderPresent(gRenderer);
 
 		SDL_PollEvent(&e);
@@ -67,6 +49,10 @@ int main(int argc, char *argv[])
 		{
 			quit = true;
 		}
+		r -= 1;
+		g -= 2;
+		b -= 3;
+		gFoo.setColor(r, g, b);
 	}
 
 	close();
@@ -81,23 +67,24 @@ bool init()
 		printf("sdl init failed %s\n", SDL_GetError());
 		return false;
 	}
+
 	if(IMG_Init(IMG_INIT_PNG) != IMG_INIT_PNG)
 	{
 		printf("img init failed %s\n", IMG_GetError());
 		return false;
 	}
 
-	gWindow = SDL_CreateWindow("sdl tutorial 11", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+	gWindow = SDL_CreateWindow("sdl tutorial 12", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 	if(gWindow == NULL)
 	{
-		printf("createwindow failed %s\n", SDL_GetError());
+		printf("createWindow failed error %s\n", SDL_GetError());
 		return false;
 	}
 
 	gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	if(gRenderer == NULL)
 	{
-		printf("createrenderer failed %s\n", SDL_GetError());
+		printf("create renderer failed %s\n", SDL_GetError());
 		return false;
 	}
 	return true;
@@ -105,56 +92,30 @@ bool init()
 
 bool loadMedia()
 {
-	if(!gDots.loadFromFile("../media/dots.png"))
-	{
-		printf("failed to load dots\n");
-		return false;
-	}
-
 	if(!gBackground.loadFromFile("../media/background.png"))
 	{
 		printf("failed to load background\n");
 		return false;
 	}
 
-	gRects[RED].x = 0;
-	gRects[RED].y = 0;
-
-	gRects[GREEN].x = 100;
-	gRects[GREEN].y = 0;
-
-	gRects[YELLOW].x = 0;
-	gRects[YELLOW].y = 100;
-
-	gRects[BLUE].x = 100;
-	gRects[BLUE].y = 100;
-
-//	for(SDL_Rect rect : gRects)
-//	{
-//		printf("setting dimensions for rect\n");
-//		rect.h = 100;
-//		rect.w = 100;
-//	}
-
-//	gRects[RED].h = gRects[RED].w = 100;
-
-	for(int i = 0; i < MAX_COLORS; i++)
+	if(!gFoo.loadFromFile("../media/foo.png"))
 	{
-		gRects[i].h = gRects[i].w = 100;
+		printf("failed to load foo\n");
+		return false;
 	}
 
 	return true;
+
 }
 
 void close()
 {
-	gDots.free();
 	gBackground.free();
+	gFoo.free();
 	SDL_DestroyWindow(gWindow);
 	SDL_DestroyRenderer(gRenderer);
 	gWindow = NULL;
 	gRenderer = NULL;
-
 	IMG_Quit();
 	SDL_Quit();
 }
