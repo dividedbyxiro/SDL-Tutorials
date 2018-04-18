@@ -50,6 +50,8 @@ bool LTexture::loadFromFile(std::string path)
 		SDL_FreeSurface(surface);
 		return false;
 	}
+
+
 	width = surface->w;
 	height = surface->h;
 	SDL_FreeSurface(surface);
