@@ -1,10 +1,12 @@
 #include "LTexture.h"
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_ttf.h>
 #include <string>
 #include <stdio.h>
 
 extern SDL_Renderer *gRenderer;
+extern TTF_Font *gFont;
 
 LTexture::LTexture()
 {
@@ -32,6 +34,7 @@ void LTexture::free()
 bool LTexture::loadFromFile(std::string path)
 {
 	free();
+
 	SDL_Surface *surface = NULL;
 	SDL_Texture *texture = NULL;
 
@@ -76,4 +79,37 @@ int LTexture::getWidth()
 int LTexture::getHeight()
 {
 	return height;
+}
+
+bool LTexture::loadFromRenderedText(std::string text, SDL_Color *color)
+{
+	free();
+
+	SDL_Surface *surface = NULL;
+	SDL_Texture *texture = NULL;
+	SDL_Color red{255, 0, 0, 255};
+	SDL_Color blue{0, 0, 255, 0};
+
+//	surface = TTF_RenderText_Solid(gFont, text.c_str(), *color);
+	surface = TTF_RenderText_Shaded(gFont, text.c_str(), red, blue);
+	if(surface == NULL)
+	{
+		printf("failed to renderText %s\n", TTF_GetError());
+		return false;
+	}
+
+	texture = SDL_CreateTextureFromSurface(gRenderer, surface);
+	if(texture == NULL)
+	{
+		printf("createtexture failed %s error %s\n", text.c_str(), SDL_GetError());
+		SDL_FreeSurface(surface);
+		return false;
+	}
+	width = surface->w;
+	height = surface->h;
+	SDL_FreeSurface(surface);
+	mTexture = texture;
+	return true;
+
+
 }
